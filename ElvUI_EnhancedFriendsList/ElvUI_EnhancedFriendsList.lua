@@ -309,7 +309,7 @@ function EFL:EnhanceFriends()
 		else
 			noteFrame:Show()
 		end
-		
+
 		buttonSummon:Point("LEFT", 270, 1)
 
 		LocationText:Hide()
@@ -317,7 +317,7 @@ function EFL:EnhanceFriends()
 
 		if connected then
 			button.background:SetTexture(1, 0.80, 0.10, 0.10)
-			
+
 			if status == "<AFK>" then
 				button.statusIcon:SetTexture(E.db.enhanceFriendsList.enhancedTextures and EnhancedAway or Away)
 			elseif status == "<DND>" then
@@ -335,7 +335,7 @@ function EFL:EnhanceFriends()
 			ElvCharacterDB.EnhancedFriendsList_Data[name].level = level
 			ElvCharacterDB.EnhancedFriendsList_Data[name].class = class
 			ElvCharacterDB.EnhancedFriendsList_Data[name].area = area
-			ElvCharacterDB.EnhancedFriendsList_Data[name].lastSeen = format('%i', time())
+			ElvCharacterDB.EnhancedFriendsList_Data[name].lastSeen = format("%i", time())
 
 			if E.db.enhanceFriendsList.enhancedName then
 				if E.db.enhanceFriendsList.hideClass then
@@ -369,10 +369,10 @@ function EFL:EnhanceFriends()
 
 			infoText:SetText(area)
 		else
-			button.background:SetTexture(0.6, 0.6, 0.6, 0.10)
+			button.background:SetTexture(0.5, 0.5, 0.5, 0.10)
 			button.statusIcon:SetTexture(E.db.enhanceFriendsList.enhancedTextures and EnhancedOffline or Offline)
 
-			nameText:SetTextColor(0.6, 0.6, 0.6)
+			nameText:SetTextColor(0.75, 0.75, 0.75)
 
 			if ElvCharacterDB.EnhancedFriendsList_Data[name] then
 				local lastSeen = ElvCharacterDB.EnhancedFriendsList_Data[name].lastSeen
@@ -383,7 +383,7 @@ function EFL:EnhanceFriends()
 				area = ElvCharacterDB.EnhancedFriendsList_Data[name].area
 
 				if E.db.enhanceFriendsList.showLastSeen then
-					nameText:SetFormattedText("%s - %s %s %s", name, LEVEL, level, class)
+					nameText:SetFormattedText("%s - %s %s %s", name, shortLevel, level, class)
 					infoText:SetFormattedText("%s - %s %s", area, L["Last seen"], RecentTimeDate(td.year, td.month, td.day, td.hour))
 				else
 					nameText:SetText(name)
@@ -410,10 +410,10 @@ function EFL:EnhanceFriends()
 				if area == playerZone then
 					infoText:SetTextColor(0, 1, 0)
 				else
-					infoText:SetTextColor(0.49, 0.52, 0.54)
+					infoText:SetTextColor(0.6, 0.6, 0.6)
 				end
 			else
-				infoText:SetTextColor(0.49, 0.52, 0.54)
+				infoText:SetTextColor(0.6, 0.6, 0.6)
 			end
 		end
 
@@ -430,10 +430,10 @@ function EFL:EnhanceFriends()
 				if E.db.enhanceFriendsList.sameZone and area == playerZone then
 					GameTooltip:AddLine(area, 0, 1, 0)
 				else
-					GameTooltip:AddLine(area, 0.49, 0.52, 0.54)
+					GameTooltip:AddLine(area, 0.75, 0.75, 0.75)
 				end
 			else
-				GameTooltip:AddLine(name, 0.6, 0.6, 0.6)
+				GameTooltip:AddLine(name, 0.75, 0.75, 0.75)
 			end
 
 			if note then
