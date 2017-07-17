@@ -15,14 +15,20 @@ local LOCALIZED_CLASS_NAMES_FEMALE = LOCALIZED_CLASS_NAMES_FEMALE
 local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
-local EnhancedOnline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\StatusIcon-Online"
-local EnhancedOffline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\StatusIcon-Offline"
-local EnhancedAway = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\StatusIcon-Away"
-local EnhancedBusy = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\StatusIcon-DnD"
+local Online = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-Online"
+local Offline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-Offline"
+local Away = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-Away"
+local Busy = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-DnD"
+local EnhancedOnline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Flat\\StatusIcon-Online"
+local EnhancedOffline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Flat\\StatusIcon-Offline"
+local EnhancedAway = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Flat\\StatusIcon-Away"
+local EnhancedBusy = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Flat\\StatusIcon-DnD"
+
 local Locale = GetLocale()
 
 -- Profile
 P["enhanceFriendsList"] = {
+	["showStatusIcon"] = true,
 	["enhancedTextures"] = true,
 	["enhancedName"] = true,
 	["enhancedZone"] = false,
@@ -70,50 +76,57 @@ function EFL:InsertOptions()
 						name = L["Show Background"],
 						set = function(info, value) E.db.enhanceFriendsList.showBackground = value; EFL:EnhanceFriends() end
 					},
-					enhancedTextures = {
+					showStatusIcon = {
 						order = 2,
 						type = "toggle",
 						name = L["Show Status Icon"],
-						set = function(info, value) E.db.enhanceFriendsList.enhancedTextures = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.showStatusIcon = value; EFL:EnhanceFriends() end
+					},
+					enhancedTextures = {
+						order = 3,
+						type = "toggle",
+						name = L["Enhanced Status"],
+						set = function(info, value) E.db.enhanceFriendsList.enhancedTextures = value; EFL:EnhanceFriends() end,
+						disabled = function() return not E.db.enhanceFriendsList.showStatusIcon; end
 					},
 					enhancedName = {
-						order = 3,
+						order = 4,
 						type = "toggle",
 						name = L["Enhanced Name"],
 						set = function(info, value) E.db.enhanceFriendsList.enhancedName = value; EFL:EnhanceFriends() end
 					},
 					enhancedZone = { --TODO: Add the ability to change color
-						order = 4,
+						order = 5,
 						type = "toggle",
 						name = L["Enhanced Zone"],
 						set = function(info, value) E.db.enhanceFriendsList.enhancedZone = value; EFL:EnhanceFriends() end
 					},
 					hideClass = {
-						order = 5,
+						order = 6,
 						type = "toggle",
 						name = L["Hide Class Text"],
 						set = function(info, value) E.db.enhanceFriendsList.hideClass = value; EFL:EnhanceFriends() end
 					},
 					hideNotesIcon = {
-						order = 6,
+						order = 7,
 						type = "toggle",
 						name = L["Hide Note Icon"],
 						set = function(info, value) E.db.enhanceFriendsList.hideNotesIcon = value; EFL:EnhanceFriends() end
 					},
 					levelColor = {
-						order = 7,
+						order = 8,
 						type = "toggle",
 						name = L["Level Range Color"],
 						set = function(info, value) E.db.enhanceFriendsList.levelColor = value; EFL:EnhanceFriends() end
 					},
 					shortLevel = {
-						order = 8,
+						order = 9,
 						type = "toggle",
 						name = L["Short Level"],
 						set = function(info, value) E.db.enhanceFriendsList.shortLevel = value; EFL:EnhanceFriends() end
 					},
 					sameZone = { --TODO: Add the ability to change color
-						order = 9,
+						order = 10,
 						type = "toggle",
 						name = L["Same Zone Color"],
 						desc = L["Friends that are in the same area as you, have their zone info colorized green."],
@@ -257,7 +270,7 @@ function EFL:EnhanceFriends()
 		end
 
 		nameText:ClearAllPoints()
-		if E.db.enhanceFriendsList.enhancedTextures then
+		if E.db.enhanceFriendsList.showStatusIcon then
 			button.statusIcon:Show()
 			nameText:Point("TOPLEFT", 15, -3)
 			noteFrame:Point("RIGHT", nameText, "LEFT", -3, -13)
@@ -282,11 +295,11 @@ function EFL:EnhanceFriends()
 			button.background:SetTexture(1, 0.80, 0.10, 0.10)
 			
 			if status == "<AFK>" then
-				button.statusIcon:SetTexture(EnhancedAway)
+				button.statusIcon:SetTexture(E.db.enhanceFriendsList.enhancedTextures and EnhancedAway or Away)
 			elseif status == "<DND>" then
-				button.statusIcon:SetTexture(EnhancedBusy)
+				button.statusIcon:SetTexture(E.db.enhanceFriendsList.enhancedTextures and EnhancedBusy or Busy)
 			else
-				button.statusIcon:SetTexture(EnhancedOnline)
+				button.statusIcon:SetTexture(E.db.enhanceFriendsList.enhancedTextures and EnhancedOnline or Online)
 			end
 
 			nameText:SetTextColor(1, 0.80, 0.10)
@@ -324,7 +337,7 @@ function EFL:EnhanceFriends()
 			infoText:SetText(area)
 		else
 			button.background:SetTexture(0.6, 0.6, 0.6, 0.10)
-			button.statusIcon:SetTexture(EnhancedOffline)
+			button.statusIcon:SetTexture(E.db.enhanceFriendsList.enhancedTextures and EnhancedOffline or Offline)
 
 			nameText:SetText(name)
 			nameText:SetTextColor(0.6, 0.6, 0.6)

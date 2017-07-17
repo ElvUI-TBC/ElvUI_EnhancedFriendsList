@@ -4,6 +4,7 @@ if not L then return end
 
 L["Enhanced Friends List"] = true;
 L["Enhanced Name"] = true;
+L["Enhanced Status"] = true;
 L["Enhanced Zone"] = true;
 L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 L["Hide Class Text"] = true;
@@ -25,6 +26,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("ElvUI", "deDE")
 if L then
 	L["Enhanced Friends List"] = true;
 	L["Enhanced Name"] = true;
+	L["Enhanced Status"] = true;
 	L["Enhanced Zone"] = true;
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
@@ -45,6 +47,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("ElvUI", "esES")
 if L then
 	L["Enhanced Friends List"] = true;
 	L["Enhanced Name"] = true;
+	L["Enhanced Status"] = true;
 	L["Enhanced Zone"] = true;
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
@@ -65,6 +68,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("ElvUI", "frFR")
 if L then
 	L["Enhanced Friends List"] = true;
 	L["Enhanced Name"] = true;
+	L["Enhanced Status"] = true;
 	L["Enhanced Zone"] = true;
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
@@ -85,6 +89,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("ElvUI", "koKR")
 if L then
 	L["Enhanced Friends List"] = true;
 	L["Enhanced Name"] = true;
+	L["Enhanced Status"] = true;
 	L["Enhanced Zone"] = true;
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
@@ -105,6 +110,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("ElvUI", "ptBR")
 if L then
 	L["Enhanced Friends List"] = true;
 	L["Enhanced Name"] = true;
+	L["Enhanced Status"] = true;
 	L["Enhanced Zone"] = true;
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
@@ -125,6 +131,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("ElvUI", "ruRU")
 if L then
 	L["Enhanced Friends List"] = true;
 	L["Enhanced Name"] = true;
+	L["Enhanced Status"] = true;
 	L["Enhanced Zone"] = true;
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
@@ -145,6 +152,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("ElvUI", "zhCN")
 if L then
 	L["Enhanced Friends List"] = true;
 	L["Enhanced Name"] = true;
+	L["Enhanced Status"] = true;
 	L["Enhanced Zone"] = true;
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
@@ -165,6 +173,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("ElvUI", "zhTW")
 if L then
 	L["Enhanced Friends List"] = true;
 	L["Enhanced Name"] = true;
+	L["Enhanced Status"] = true;
 	L["Enhanced Zone"] = true;
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
