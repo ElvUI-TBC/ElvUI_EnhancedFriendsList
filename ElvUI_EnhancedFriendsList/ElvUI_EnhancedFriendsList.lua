@@ -280,6 +280,8 @@ function EFL:EnhanceFriends()
 			button.background:SetTexture(1, 0.80, 0.10, 0.10)
 			button.statusIcon:SetTexture(EnhancedOnline)
 
+			nameText:SetTextColor(1, 0.80, 0.10)
+
 			if E.db.enhanceFriendsList.enhancedName then
 				if E.db.enhanceFriendsList.hideClass then
 					if E.db.enhanceFriendsList.levelColor then
