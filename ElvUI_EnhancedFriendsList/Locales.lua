@@ -9,6 +9,7 @@ L["Enhanced Zone"] = true;
 L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 L["Hide Class Text"] = true;
 L["Hide Note Icon"] = true;
+L["Last seen"] = true;
 L["Level Range Color"] = true;
 L["Name Text Font"] = true;
 L["Notes"] = true;
@@ -16,6 +17,7 @@ L["Same Zone Color"] = true;
 L["SHORT_LEVEL"] = "L"
 L["Short Level"] = true;
 L["Show Background"] = true;
+L["Show Offline Info"] = true;
 L["Show Status Icon"] = true;
 L["Zone Text Font"] = true;
 
@@ -31,6 +33,7 @@ if L then
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
 	L["Hide Note Icon"] = true;
+	L["Last seen"] = true;
 	L["Level Range Color"] = true;
 	L["Name Text Font"] = true;
 	L["Notes"] = true;
@@ -38,6 +41,7 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
+	L["Show Offline Info"] = true;
 	L["Show Status Icon"] = true;
 	L["Zone Text Font"] = true;
 end
@@ -52,6 +56,7 @@ if L then
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
 	L["Hide Note Icon"] = true;
+	L["Last seen"] = true;
 	L["Level Range Color"] = true;
 	L["Name Text Font"] = true;
 	L["Notes"] = true;
@@ -59,6 +64,7 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
+	L["Show Offline Info"] = true;
 	L["Show Status Icon"] = true;
 	L["Zone Text Font"] = true;
 end
@@ -73,6 +79,7 @@ if L then
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
 	L["Hide Note Icon"] = true;
+	L["Last seen"] = true;
 	L["Level Range Color"] = true;
 	L["Name Text Font"] = true;
 	L["Notes"] = true;
@@ -80,6 +87,7 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
+	L["Show Offline Info"] = true;
 	L["Show Status Icon"] = true;
 	L["Zone Text Font"] = true;
 end
@@ -94,6 +102,7 @@ if L then
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
 	L["Hide Note Icon"] = true;
+	L["Last seen"] = true;
 	L["Level Range Color"] = true;
 	L["Name Text Font"] = true;
 	L["Notes"] = true;
@@ -101,6 +110,7 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
+	L["Show Offline Info"] = true;
 	L["Show Status Icon"] = true;
 	L["Zone Text Font"] = true;
 end
@@ -115,6 +125,7 @@ if L then
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
 	L["Hide Note Icon"] = true;
+	L["Last seen"] = true;
 	L["Level Range Color"] = true;
 	L["Name Text Font"] = true;
 	L["Notes"] = true;
@@ -122,6 +133,7 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
+	L["Show Offline Info"] = true;
 	L["Show Status Icon"] = true;
 	L["Zone Text Font"] = true;
 end
@@ -136,6 +148,7 @@ if L then
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
 	L["Hide Note Icon"] = true;
+	L["Last seen"] = true;
 	L["Level Range Color"] = true;
 	L["Name Text Font"] = true;
 	L["Notes"] = true;
@@ -143,6 +156,7 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
+	L["Show Offline Info"] = true;
 	L["Show Status Icon"] = true;
 	L["Zone Text Font"] = true;
 end
@@ -157,6 +171,7 @@ if L then
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
 	L["Hide Note Icon"] = true;
+	L["Last seen"] = true;
 	L["Level Range Color"] = true;
 	L["Name Text Font"] = true;
 	L["Notes"] = true;
@@ -164,6 +179,7 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
+	L["Show Offline Info"] = true;
 	L["Show Status Icon"] = true;
 	L["Zone Text Font"] = true;
 end
@@ -178,6 +194,7 @@ if L then
 	L["Friends that are in the same area as you, have their zone info colorized green."] = true;
 	L["Hide Class Text"] = true;
 	L["Hide Note Icon"] = true;
+	L["Last seen"] = true;
 	L["Level Range Color"] = true;
 	L["Name Text Font"] = true;
 	L["Notes"] = true;
@@ -185,6 +202,7 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
+	L["Show Offline Info"] = true;
 	L["Show Status Icon"] = true;
 	L["Zone Text Font"] = true;
 end

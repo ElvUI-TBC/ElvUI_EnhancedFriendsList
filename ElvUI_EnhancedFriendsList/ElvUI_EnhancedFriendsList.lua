@@ -4,7 +4,7 @@ local EP = LibStub("LibElvUIPlugin-1.0");
 local LSM = LibStub("LibSharedMedia-3.0", true)
 local addonName = "ElvUI_EnhancedFriendsList"
 
-local pairs = pairs
+local pairs, ipairs = pairs, ipairs
 local format = format
 
 local GetFriendInfo = GetFriendInfo
@@ -38,6 +38,7 @@ P["enhanceFriendsList"] = {
 	["levelColor"] = false,
 	["shortLevel"] = false,
 	["sameZone"] = true,
+	["showLastSeen"] = true,
 	["nameFont"] = "PT Sans Narrow",
 	["nameFontSize"] = 12,
 	["nameFontOutline"] = "NONE",
@@ -131,6 +132,12 @@ function EFL:InsertOptions()
 						name = L["Same Zone Color"],
 						desc = L["Friends that are in the same area as you, have their zone info colorized green."],
 						set = function(info, value) E.db.enhanceFriendsList.sameZone = value; EFL:EnhanceFriends() end
+					},
+					showLastSeen = {
+						order = 11,
+						type = "toggle",
+						name = L["Show Offline Info"],
+						set = function(info, value) E.db.enhanceFriendsList.showLastSeen = value; EFL:EnhanceFriends() end
 					}
 				}
 			},
@@ -229,11 +236,28 @@ local function ClassColorCode(class)
 	end
 end
 
+local function timeDiff(t2, t1)
+	if t2 < t1 then return end
+
+	local d1, d2, carry, diff = date("*t",t1), date("*t", t2), false, {}
+	local colMax = {60, 60, 24, date("*t", time{year = d1.year,month = d1.month + 1, day = 0}).day, 12}
+
+	d2.hour = d2.hour - (d2.isdst and 1 or 0) + (d1.isdst and 1 or 0)
+	for i,v in ipairs({"sec", "min", "hour", "day", "month", "year"}) do 
+		diff[v] = d2[v] - d1[v] + (carry and -1 or 0)
+		carry = diff[v] < 0
+		if carry then diff[v] = diff[v] + colMax[i] end
+	end
+
+	return diff
+end
+
 function EFL:EnhanceFriends()
 	local numFriends = GetNumFriends()
 	local friendOffset = FauxScrollFrame_GetOffset(FriendsFrameFriendsScrollFrame)
 	local friendIndex
 	local playerZone = GetRealZoneText()
+	local now = time()
 
 	for i = 1, FRIENDS_TO_DISPLAY, 1 do
 		friendIndex = friendOffset + i
@@ -304,6 +328,15 @@ function EFL:EnhanceFriends()
 
 			nameText:SetTextColor(1, 0.80, 0.10)
 
+			if not ElvCharacterDB.EnhancedFriendsList_Data[name] then
+				ElvCharacterDB.EnhancedFriendsList_Data[name] = {}
+			end
+
+			ElvCharacterDB.EnhancedFriendsList_Data[name].level = level
+			ElvCharacterDB.EnhancedFriendsList_Data[name].class = class
+			ElvCharacterDB.EnhancedFriendsList_Data[name].area = area
+			ElvCharacterDB.EnhancedFriendsList_Data[name].lastSeen = format('%i', time())
+
 			if E.db.enhanceFriendsList.enhancedName then
 				if E.db.enhanceFriendsList.hideClass then
 					if E.db.enhanceFriendsList.levelColor then
@@ -339,8 +372,27 @@ function EFL:EnhanceFriends()
 			button.background:SetTexture(0.6, 0.6, 0.6, 0.10)
 			button.statusIcon:SetTexture(E.db.enhanceFriendsList.enhancedTextures and EnhancedOffline or Offline)
 
-			nameText:SetText(name)
 			nameText:SetTextColor(0.6, 0.6, 0.6)
+
+			if ElvCharacterDB.EnhancedFriendsList_Data[name] then
+				local lastSeen = ElvCharacterDB.EnhancedFriendsList_Data[name].lastSeen
+				local td = timeDiff(now, tonumber(lastSeen))
+
+				level = ElvCharacterDB.EnhancedFriendsList_Data[name].level
+				class = ElvCharacterDB.EnhancedFriendsList_Data[name].class
+				area = ElvCharacterDB.EnhancedFriendsList_Data[name].area
+
+				if E.db.enhanceFriendsList.showLastSeen then
+					nameText:SetFormattedText("%s - %s %s %s", name, LEVEL, level, class)
+					infoText:SetFormattedText("%s - %s %s", area, L["Last seen"], RecentTimeDate(td.year, td.month, td.day, td.hour))
+				else
+					nameText:SetText(name)
+					infoText:SetText(area)
+				end
+			else
+				nameText:SetText(name)
+				infoText:SetText(area)
+			end
 		end
 
 		if E.db.enhanceFriendsList.enhancedZone and connected then
@@ -396,6 +448,15 @@ function EFL:EnhanceFriends()
 end
 
 function EFL:FriendListUpdate()
+	if not ElvCharacterDB.EnhancedFriendsList_Data then
+		ElvCharacterDB.EnhancedFriendsList_Data = {}
+	end
+
+	if E.global.EnhancedFriendsList_Data then
+		ElvCharacterDB.EnhancedFriendsList_Data = E.global.EnhancedFriendsList_Data
+		E.global.EnhancedFriendsList_Data = nil
+	end
+
 	hooksecurefunc("FriendsList_Update", EFL.EnhanceFriends)
 	FriendsFrameFriendsScrollFrame:HookScript("OnVerticalScroll", function() EFL:EnhanceFriends() end)
 end
