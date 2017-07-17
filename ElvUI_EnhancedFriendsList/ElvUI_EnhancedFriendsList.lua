@@ -17,6 +17,8 @@ local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
 local EnhancedOnline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\StatusIcon-Online"
 local EnhancedOffline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\StatusIcon-Offline"
+local EnhancedAway = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\StatusIcon-Away"
+local EnhancedBusy = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\StatusIcon-DnD"
 local Locale = GetLocale()
 
 -- Profile
@@ -278,7 +280,14 @@ function EFL:EnhanceFriends()
 
 		if connected then
 			button.background:SetTexture(1, 0.80, 0.10, 0.10)
-			button.statusIcon:SetTexture(EnhancedOnline)
+			
+			if status == "<AFK>" then
+				button.statusIcon:SetTexture(EnhancedAway)
+			elseif status == "<DND>" then
+				button.statusIcon:SetTexture(EnhancedBusy)
+			else
+				button.statusIcon:SetTexture(EnhancedOnline)
+			end
 
 			nameText:SetTextColor(1, 0.80, 0.10)
 
@@ -316,7 +325,7 @@ function EFL:EnhanceFriends()
 		else
 			button.background:SetTexture(0.6, 0.6, 0.6, 0.10)
 			button.statusIcon:SetTexture(EnhancedOffline)
-			
+
 			nameText:SetText(name)
 			nameText:SetTextColor(0.6, 0.6, 0.6)
 		end
