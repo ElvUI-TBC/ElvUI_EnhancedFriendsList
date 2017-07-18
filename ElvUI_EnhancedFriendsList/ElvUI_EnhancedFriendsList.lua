@@ -530,7 +530,20 @@ function EFL:EnhanceFriends()
 				end
 			else
 				nameText:SetText(name)
-				infoText:SetText(area)
+
+				if E.db.enhanceFriendsList.offlineShowZone then
+					if E.db.enhanceFriendsList.offlineShowLastSeen then
+						infoText:SetFormattedText("%s - %s", area, area)
+					else
+						infoText:SetText(area)
+					end
+				else
+					if E.db.enhanceFriendsList.offlineShowLastSeen then
+						infoText:SetText(area)
+					else
+						infoText:SetText("")
+					end
+				end
 			end
 		end
 
