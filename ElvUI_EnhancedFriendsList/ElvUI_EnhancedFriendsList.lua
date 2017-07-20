@@ -10,10 +10,11 @@ local format = format
 local GetFriendInfo = GetFriendInfo
 local GetQuestDifficultyColor = GetQuestDifficultyColor
 local GetNumFriends = GetNumFriends
-local LEVEL = LEVEL
 local LOCALIZED_CLASS_NAMES_FEMALE = LOCALIZED_CLASS_NAMES_FEMALE
 local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
+local CUSTOM_CLASS_COLORS = CUSTOM_CLASS_COLORS
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
+local LEVEL = LEVEL
 
 local Online = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-Online"
 local Offline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-Offline"
@@ -43,8 +44,10 @@ P["enhanceFriendsList"] = {
 	["sameZone"] = true,
 	-- Offline
 	["offlineEnhancedName"] = false,
-	["offlineShowClass"] = false,
-	["offlineShowLevel"] = false,
+	["offlineColorizeNameOnly"] = true,
+	["offlineHideClass"] = true,
+	["offlineHideLevel"] = false,
+	["offlineLevelColor"] = false,
 	["offlineShortLevel"] = false,
 	["offlineShowZone"] = false,
 	["offlineShowLastSeen"] = true,
@@ -173,40 +176,54 @@ function EFL:InsertOptions()
 						name = L["Enhanced Name"],
 						set = function(info, value) E.db.enhanceFriendsList.offlineEnhancedName = value; EFL:EnhanceFriends() end
 					},
-					offlineShowZone = {
+					offlineColorizeNameOnly = {
 						order = 2,
 						type = "toggle",
-						name = L["Show Zone"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineShowZone = value; EFL:EnhanceFriends() end
+						name = L["Colorize Name Only"],
+						set = function(info, value) E.db.enhanceFriendsList.offlineColorizeNameOnly = value; EFL:EnhanceFriends() end,
+						disabled = function() return not E.db.enhanceFriendsList.offlineEnhancedName; end
 					},
-					offlineShowLastSeen = {
+					offlineHideClass = {
 						order = 3,
 						type = "toggle",
-						name = L["Show Last Seen"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineShowLastSeen = value; EFL:EnhanceFriends() end
+						name = L["Hide Class Text"],
+						set = function(info, value) E.db.enhanceFriendsList.offlineHideClass = value; EFL:EnhanceFriends() end
 					},
-					offlineShowClass = {
+					offlineHideLevel = {
 						order = 4,
 						type = "toggle",
-						name = L["Show Class Text"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineShowClass = value; EFL:EnhanceFriends() end
+						name = L["Hide Level"],
+						set = function(info, value) E.db.enhanceFriendsList.offlineHideLevel = value; EFL:EnhanceFriends() end
 					},
-					offlineShowLevel = {
+					offlineLevelColor = {
 						order = 5,
 						type = "toggle",
-						name = L["Show Level"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineShowLevel = value; EFL:EnhanceFriends() end
+						name = L["Level Range Color"],
+						set = function(info, value) E.db.enhanceFriendsList.offlineLevelColor = value; EFL:EnhanceFriends() end,
+						disabled = function() return E.db.enhanceFriendsList.offlineHideLevel; end
 					},
 					offlineShortLevel = {
 						order = 6,
 						type = "toggle",
 						name = L["Short Level"],
 						set = function(info, value) E.db.enhanceFriendsList.offlineShortLevel = value; EFL:EnhanceFriends() end,
-						disabled = function() return not E.db.enhanceFriendsList.offlineShowLevel; end
+						disabled = function() return E.db.enhanceFriendsList.offlineHideLevel; end
+					},
+					offlineShowZone = {
+						order = 7,
+						type = "toggle",
+						name = L["Show Zone"],
+						set = function(info, value) E.db.enhanceFriendsList.offlineShowZone = value; EFL:EnhanceFriends() end
+					},
+					offlineShowLastSeen = {
+						order = 8,
+						type = "toggle",
+						name = L["Show Last Seen"],
+						set = function(info, value) E.db.enhanceFriendsList.offlineShowLastSeen = value; EFL:EnhanceFriends() end
 					}
 				}
 			},
-			nameFont = {
+			font = {
 				order = 5,
 				type = "group",
 				name = L["Font"],
@@ -485,32 +502,56 @@ function EFL:EnhanceFriends()
 				class = ElvCharacterDB.EnhancedFriendsList_Data[name].class
 				area = ElvCharacterDB.EnhancedFriendsList_Data[name].area
 
+				local offlineDiff = level ~= 0 and format("|cff%02x%02x%02x", GetQuestDifficultyColor(level).r * 160, GetQuestDifficultyColor(level).g * 160, GetQuestDifficultyColor(level).b * 160) or "|cFFAFAFAF"
+				local offlineDiffColor
+				if E.db.enhanceFriendsList.offlineColorizeNameOnly then
+					offlineDiffColor = E.db.enhanceFriendsList.offlineLevelColor and offlineDiff or "|cFFAFAFAF"
+				else
+					offlineDiffColor = E.db.enhanceFriendsList.offlineLevelColor and offlineDiff or OfflineColorCode(class)
+				end
+
 				if E.db.enhanceFriendsList.offlineEnhancedName then
-					if E.db.enhanceFriendsList.offlineShowClass then
-						if E.db.enhanceFriendsList.offlineShowLevel then
-							nameText:SetFormattedText("%s%s|r - %s %s %s", OfflineColorCode(class), name, offlineShortLevel, level, class)
+					if E.db.enhanceFriendsList.offlineColorizeNameOnly then
+						if E.db.enhanceFriendsList.offlineHideClass then
+							if E.db.enhanceFriendsList.offlineHideLevel then
+								nameText:SetFormattedText("%s%s", OfflineColorCode(class), name)
+							else
+								nameText:SetFormattedText("%s%s|r - %s %s%s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level)
+							end
 						else
-							nameText:SetFormattedText("%s%s|r - %s", OfflineColorCode(class), name, class)
+							if E.db.enhanceFriendsList.offlineHideLevel then
+								nameText:SetFormattedText("%s%s|r - %s", OfflineColorCode(class), name, class)
+							else
+								nameText:SetFormattedText("%s%s|r - %s %s%s|r %s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level, class)
+							end
 						end
 					else
-						if E.db.enhanceFriendsList.offlineShowLevel then
-							nameText:SetFormattedText("%s%s|r - %s %s", OfflineColorCode(class), name, offlineShortLevel, level)
+						if E.db.enhanceFriendsList.offlineHideClass then
+							if E.db.enhanceFriendsList.offlineHideLevel then
+								nameText:SetFormattedText("%s%s", OfflineColorCode(class), name)
+							else
+								nameText:SetFormattedText("%s%s - %s %s%s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level)
+							end
 						else
-							nameText:SetFormattedText("%s%s", OfflineColorCode(class), name)
+							if E.db.enhanceFriendsList.offlineHideLevel then
+								nameText:SetFormattedText("%s%s - %s", OfflineColorCode(class), name, class)
+							else
+								nameText:SetFormattedText("%s%s - %s %s%s|r %s%s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level, OfflineColorCode(class), class)
+							end
 						end
 					end
 				else
-					if E.db.enhanceFriendsList.offlineShowClass then
-						if E.db.enhanceFriendsList.offlineShowLevel then
-							nameText:SetFormattedText("%s - %s %s %s", name, offlineShortLevel, level, class)
+					if E.db.enhanceFriendsList.offlineHideClass then
+						if E.db.enhanceFriendsList.offlineHideLevel then
+							nameText:SetText(name)
 						else
-							nameText:SetFormattedText("%s - %s", name, class)
+							nameText:SetFormattedText("%s - %s %s%s", name, offlineShortLevel, offlineDiffColor, level)
 						end
 					else
-						if E.db.enhanceFriendsList.offlineShowLevel then
-							nameText:SetFormattedText("%s - %s %s", name, offlineShortLevel, level)
+						if E.db.enhanceFriendsList.offlineHideLevel then
+							nameText:SetFormattedText("%s - %s", name, class)
 						else
-							nameText:SetText(name)
+							nameText:SetFormattedText("%s - %s %s%s|r %s", name, offlineShortLevel, offlineDiffColor, level, class)
 						end
 					end
 				end

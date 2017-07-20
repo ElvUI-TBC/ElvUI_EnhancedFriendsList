@@ -22,7 +22,6 @@ L["Same Zone Color"] = true;
 L["SHORT_LEVEL"] = "L"
 L["Short Level"] = true;
 L["Show Background"] = true;
-L["Show Class Text"] = true;
 L["Show Last Seen"] = true;
 L["Show Level"] = true;
 L["Show Status Icon"] = true;
@@ -56,7 +55,6 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
-	L["Show Class Text"] = true;
 	L["Show Last Seen"] = true;
 	L["Show Level"] = true;
 	L["Show Status Icon"] = true;
@@ -89,7 +87,6 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
-	L["Show Class Text"] = true;
 	L["Show Last Seen"] = true;
 	L["Show Level"] = true;
 	L["Show Status Icon"] = true;
@@ -122,7 +119,6 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
-	L["Show Class Text"] = true;
 	L["Show Last Seen"] = true;
 	L["Show Level"] = true;
 	L["Show Status Icon"] = true;
@@ -155,7 +151,6 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
-	L["Show Class Text"] = true;
 	L["Show Last Seen"] = true;
 	L["Show Level"] = true;
 	L["Show Status Icon"] = true;
@@ -188,7 +183,6 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
-	L["Show Class Text"] = true;
 	L["Show Last Seen"] = true;
 	L["Show Level"] = true;
 	L["Show Status Icon"] = true;
@@ -221,7 +215,6 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
-	L["Show Class Text"] = true;
 	L["Show Last Seen"] = true;
 	L["Show Level"] = true;
 	L["Show Status Icon"] = true;
@@ -254,7 +247,6 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
-	L["Show Class Text"] = true;
 	L["Show Last Seen"] = true;
 	L["Show Level"] = true;
 	L["Show Status Icon"] = true;
@@ -287,7 +279,6 @@ if L then
 	L["SHORT_LEVEL"] = "L"
 	L["Short Level"] = true;
 	L["Show Background"] = true;
-	L["Show Class Text"] = true;
 	L["Show Last Seen"] = true;
 	L["Show Level"] = true;
 	L["Show Status Icon"] = true;
