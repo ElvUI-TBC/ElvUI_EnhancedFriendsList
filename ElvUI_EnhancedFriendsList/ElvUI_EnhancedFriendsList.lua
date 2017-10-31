@@ -1,6 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI)
 local EFL = E:NewModule("EnhancedFriendsList")
-local EP = LibStub("LibElvUIPlugin-1.0");
+local EP = LibStub("LibElvUIPlugin-1.0")
 local LSM = LibStub("LibSharedMedia-3.0", true)
 local addonName = "ElvUI_EnhancedFriendsList"
 
@@ -16,14 +16,26 @@ local CUSTOM_CLASS_COLORS = CUSTOM_CLASS_COLORS
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local LEVEL = LEVEL
 
-local Online = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-Online"
-local Offline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-Offline"
-local Away = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-Away"
-local Busy = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Classic\\StatusIcon-DnD"
-local EnhancedOnline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Flat\\StatusIcon-Online"
-local EnhancedOffline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Flat\\StatusIcon-Offline"
-local EnhancedAway = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Flat\\StatusIcon-Away"
-local EnhancedBusy = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Textures\\Flat\\StatusIcon-DnD"
+local StatusIcons = {
+	Default = {
+		Online = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\Online",
+		Offline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\Offline",
+		DND	= "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\DND",
+		AFK	= "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\AFK"
+	},
+	Square = {
+		Online = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\Online",
+		Offline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\Offline",
+		DND	= "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\DND",
+		AFK	= "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\AFK"
+	},
+	D3 = {
+		Online = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\D3\\Online",
+		Offline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\D3\\Offline",
+		DND = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\D3\\DND",
+		AFK = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\D3\\AFK"
+	}
+}
 
 local Locale = GetLocale()
 
@@ -32,7 +44,7 @@ P["enhanceFriendsList"] = {
 	-- General
 	["showBackground"] = true,
 	["showStatusIcon"] = true,
-	["enhancedTextures"] = true,
+	["statusIcons"] = "Square",
 	["hideNotesIcon"] = true,
 	-- Online
 	["enhancedName"] = true,
@@ -61,11 +73,11 @@ P["enhanceFriendsList"] = {
 	["zoneFont"] = "PT Sans Narrow",
 	["zoneFontSize"] = 12,
 	["zoneFontOutline"] = "NONE"
-};
+}
 
 -- Options
 local function ColorizeSettingName(settingName)
-	return format("|cff1784d1%s|r", settingName);
+	return format("|cff1784d1%s|r", settingName)
 end
 
 function EFL:InsertOptions()
@@ -74,7 +86,7 @@ function EFL:InsertOptions()
 		type = "group",
 		name = ColorizeSettingName(L["Enhanced Friends List"]),
 		get = function(info) return E.db.enhanceFriendsList[ info[#info] ] end,
-		set = function(info, value) E.db.enhanceFriendsList[ info[#info] ] = value; end,
+		set = function(info, value) E.db.enhanceFriendsList[ info[#info] ] = value end,
 		args = {
 			header = {
 				order = 1,
@@ -91,26 +103,30 @@ function EFL:InsertOptions()
 						order = 1,
 						type = "toggle",
 						name = L["Show Background"],
-						set = function(info, value) E.db.enhanceFriendsList.showBackground = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.showBackground = value EFL:EnhanceFriends() end
 					},
 					showStatusIcon = {
 						order = 2,
 						type = "toggle",
 						name = L["Show Status Icon"],
-						set = function(info, value) E.db.enhanceFriendsList.showStatusIcon = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.showStatusIcon = value EFL:EnhanceFriends() end
 					},
-					enhancedTextures = {
+					statusIcons = {
 						order = 3,
-						type = "toggle",
-						name = L["Enhanced Status"],
-						set = function(info, value) E.db.enhanceFriendsList.enhancedTextures = value; EFL:EnhanceFriends() end,
-						disabled = function() return not E.db.enhanceFriendsList.showStatusIcon; end
+						type = "select",
+						name = L["Status Icons Textures"],
+						values = {
+							["Default"] = "Default",
+							["Square"] = "Square",
+							["D3"] = "Diablo 3"
+						},
+						set = function(info, value) E.db.enhanceFriendsList.statusIcons = value EFL:EnhanceFriends() end,
 					},
 					hideNotesIcon = {
 						order = 4,
 						type = "toggle",
 						name = L["Hide Note Icon"],
-						set = function(info, value) E.db.enhanceFriendsList.hideNotesIcon = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.hideNotesIcon = value EFL:EnhanceFriends() end
 					}
 				}
 			},
@@ -124,14 +140,14 @@ function EFL:InsertOptions()
 						order = 1,
 						type = "toggle",
 						name = L["Enhanced Name"],
-						set = function(info, value) E.db.enhanceFriendsList.enhancedName = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.enhancedName = value EFL:EnhanceFriends() end
 					},
 					colorizeNameOnly = {
 						order = 2,
 						type = "toggle",
 						name = L["Colorize Name Only"],
-						set = function(info, value) E.db.enhanceFriendsList.colorizeNameOnly = value; EFL:EnhanceFriends() end,
-						disabled = function() return not E.db.enhanceFriendsList.enhancedName; end
+						set = function(info, value) E.db.enhanceFriendsList.colorizeNameOnly = value EFL:EnhanceFriends() end,
+						disabled = function() return not E.db.enhanceFriendsList.enhancedName end
 					},
 					hideClass = {
 						order = 3,
@@ -172,7 +188,7 @@ function EFL:InsertOptions()
 						type = "toggle",
 						name = L["Same Zone"],
 						desc = L["Friends that are in the same area as you, have their zone info colorized green."],
-						set = function(info, value) E.db.enhanceFriendsList.sameZone = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.sameZone = value EFL:EnhanceFriends() end
 					},
 					sameZoneColor = {
 						order = 8,
@@ -208,52 +224,52 @@ function EFL:InsertOptions()
 						order = 1,
 						type = "toggle",
 						name = L["Enhanced Name"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineEnhancedName = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.offlineEnhancedName = value EFL:EnhanceFriends() end
 					},
 					offlineColorizeNameOnly = {
 						order = 2,
 						type = "toggle",
 						name = L["Colorize Name Only"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineColorizeNameOnly = value; EFL:EnhanceFriends() end,
-						disabled = function() return not E.db.enhanceFriendsList.offlineEnhancedName; end
+						set = function(info, value) E.db.enhanceFriendsList.offlineColorizeNameOnly = value EFL:EnhanceFriends() end,
+						disabled = function() return not E.db.enhanceFriendsList.offlineEnhancedName end
 					},
 					offlineHideClass = {
 						order = 3,
 						type = "toggle",
 						name = L["Hide Class Text"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineHideClass = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.offlineHideClass = value EFL:EnhanceFriends() end
 					},
 					offlineHideLevel = {
 						order = 4,
 						type = "toggle",
 						name = L["Hide Level"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineHideLevel = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.offlineHideLevel = value EFL:EnhanceFriends() end
 					},
 					offlineLevelColor = {
 						order = 5,
 						type = "toggle",
 						name = L["Level Range Color"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineLevelColor = value; EFL:EnhanceFriends() end,
-						disabled = function() return E.db.enhanceFriendsList.offlineHideLevel; end
+						set = function(info, value) E.db.enhanceFriendsList.offlineLevelColor = value EFL:EnhanceFriends() end,
+						disabled = function() return E.db.enhanceFriendsList.offlineHideLevel end
 					},
 					offlineShortLevel = {
 						order = 6,
 						type = "toggle",
 						name = L["Short Level"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineShortLevel = value; EFL:EnhanceFriends() end,
-						disabled = function() return E.db.enhanceFriendsList.offlineHideLevel; end
+						set = function(info, value) E.db.enhanceFriendsList.offlineShortLevel = value EFL:EnhanceFriends() end,
+						disabled = function() return E.db.enhanceFriendsList.offlineHideLevel end
 					},
 					offlineShowZone = {
 						order = 7,
 						type = "toggle",
 						name = L["Show Zone"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineShowZone = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.offlineShowZone = value EFL:EnhanceFriends() end
 					},
 					offlineShowLastSeen = {
 						order = 8,
 						type = "toggle",
 						name = L["Show Last Seen"],
-						set = function(info, value) E.db.enhanceFriendsList.offlineShowLastSeen = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.offlineShowLastSeen = value EFL:EnhanceFriends() end
 					}
 				}
 			},
@@ -268,14 +284,14 @@ function EFL:InsertOptions()
 						type = "select", dialogControl = "LSM30_Font",
 						name = L["Name Font"],
 						values = AceGUIWidgetLSMlists.font,
-						set = function(info, value) E.db.enhanceFriendsList.nameFont = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.nameFont = value EFL:EnhanceFriends() end
 					},
 					nameFontSize = {
 						order = 2,
 						type = "range",
 						name = L["Name Font Size"],
 						min = 6, max = 22, step = 1,
-						set = function(info, value) E.db.enhanceFriendsList.nameFontSize = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.nameFontSize = value EFL:EnhanceFriends() end
 					},
 					nameFontOutline = {
 						order = 3,
@@ -288,21 +304,21 @@ function EFL:InsertOptions()
 							["MONOCHROMEOUTLINE"] = "MONOCROMEOUTLINE",
 							["THICKOUTLINE"] = "THICKOUTLINE",
 						},
-						set = function(info, value) E.db.enhanceFriendsList.nameFontOutline = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.nameFontOutline = value EFL:EnhanceFriends() end
 					},
 					zoneFont = {
 						order = 4,
 						type = "select", dialogControl = "LSM30_Font",
 						name = L["Zone Font"],
 						values = AceGUIWidgetLSMlists.font,
-						set = function(info, value) E.db.enhanceFriendsList.zoneFont = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.zoneFont = value EFL:EnhanceFriends() end
 					},
 					zoneFontSize = {
 						order = 5,
 						type = "range",
 						name = L["Zone Font Size"],
 						min = 6, max = 22, step = 1,
-						set = function(info, value) E.db.enhanceFriendsList.zoneFontSize = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.zoneFontSize = value EFL:EnhanceFriends() end
 					},
 					zoneFontOutline = {
 						order = 6,
@@ -315,7 +331,7 @@ function EFL:InsertOptions()
 							["MONOCHROMEOUTLINE"] = "MONOCROMEOUTLINE",
 							["THICKOUTLINE"] = "THICKOUTLINE",
 						},
-						set = function(info, value) E.db.enhanceFriendsList.zoneFontOutline = value; EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.zoneFontOutline = value EFL:EnhanceFriends() end
 					}
 				}
 			}
@@ -374,7 +390,7 @@ local function timeDiff(t2, t1)
 	local colMax = {60, 60, 24, date("*t", time{year = d1.year,month = d1.month + 1, day = 0}).day, 12}
 
 	d2.hour = d2.hour - (d2.isdst and 1 or 0) + (d1.isdst and 1 or 0)
-	for i, v in ipairs({"sec", "min", "hour", "day", "month", "year"}) do 
+	for i, v in ipairs({"sec", "min", "hour", "day", "month", "year"}) do
 		diff[v] = d2[v] - d1[v] + (carry and -1 or 0)
 		carry = diff[v] < 0
 		if carry then diff[v] = diff[v] + colMax[i] end
@@ -458,13 +474,7 @@ function EFL:EnhanceFriends()
 		if connected then
 			button.background:SetTexture(1, 0.80, 0.10, 0.10)
 
-			if status == "<AFK>" then
-				button.statusIcon:SetTexture(db.enhancedTextures and EnhancedAway or Away)
-			elseif status == "<DND>" then
-				button.statusIcon:SetTexture(db.enhancedTextures and EnhancedBusy or Busy)
-			else
-				button.statusIcon:SetTexture(db.enhancedTextures and EnhancedOnline or Online)
-			end
+			button.statusIcon:SetTexture(StatusIcons[db.statusIcons][(status == CHAT_FLAG_DND and "DND" or status == CHAT_FLAG_AFK and "AFK" or "Online")])
 
 			nameText:SetTextColor(1, 0.80, 0.10)
 
@@ -526,7 +536,8 @@ function EFL:EnhanceFriends()
 			infoText:SetText(area)
 		else
 			button.background:SetTexture(0.5, 0.5, 0.5, 0.10)
-			button.statusIcon:SetTexture(db.enhancedTextures and EnhancedOffline or Offline)
+
+			button.statusIcon:SetTexture(StatusIcons[db.statusIcons].Offline)
 
 			nameText:SetTextColor(0.7, 0.7, 0.7)
 
