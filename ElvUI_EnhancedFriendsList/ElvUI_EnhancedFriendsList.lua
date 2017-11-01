@@ -45,6 +45,7 @@ P["enhanceFriendsList"] = {
 	["showBackground"] = true,
 	["showStatusIcon"] = true,
 	["statusIcons"] = "Square",
+	["hideLevelText"] = false,
 	["hideNotesIcon"] = true,
 	-- Online
 	["enhancedName"] = true,
@@ -82,7 +83,7 @@ end
 
 function EFL:InsertOptions()
 	E.Options.args.enhanceFriendsList = {
-		order = 51.1,
+		order = 54,
 		type = "group",
 		name = ColorizeSettingName(L["Enhanced Friends List"]),
 		get = function(info) return E.db.enhanceFriendsList[ info[#info] ] end,
@@ -120,10 +121,16 @@ function EFL:InsertOptions()
 							["Square"] = "Square",
 							["D3"] = "Diablo 3"
 						},
-						set = function(info, value) E.db.enhanceFriendsList.statusIcons = value EFL:EnhanceFriends() end,
+						set = function(info, value) E.db.enhanceFriendsList.statusIcons = value EFL:EnhanceFriends() end
+					},
+					hideLevelText = {
+						order = 4,
+						type = "toggle",
+						name = L["Hide Level or L Text"],
+						set = function(info, value) E.db.enhanceFriendsList.hideLevelText = value EFL:EnhanceFriends() end
 					},
 					hideNotesIcon = {
-						order = 4,
+						order = 5,
 						type = "toggle",
 						name = L["Hide Note Icon"],
 						set = function(info, value) E.db.enhanceFriendsList.hideNotesIcon = value EFL:EnhanceFriends() end
@@ -210,7 +217,8 @@ function EFL:InsertOptions()
 						order = 9,
 						type = "toggle",
 						name = L["Short Level"],
-						set = function(info, value) E.db.enhanceFriendsList.shortLevel = value EFL:EnhanceFriends() end
+						set = function(info, value) E.db.enhanceFriendsList.shortLevel = value EFL:EnhanceFriends() end,
+						disabled = function() return E.db.enhanceFriendsList.hideLevelText end
 					}
 				}
 			},
@@ -257,7 +265,7 @@ function EFL:InsertOptions()
 						type = "toggle",
 						name = L["Short Level"],
 						set = function(info, value) E.db.enhanceFriendsList.offlineShortLevel = value EFL:EnhanceFriends() end,
-						disabled = function() return E.db.enhanceFriendsList.offlineHideLevel end
+						disabled = function() return E.db.enhanceFriendsList.hideLevelText or E.db.enhanceFriendsList.offlineHideLevel end
 					},
 					offlineShowZone = {
 						order = 7,
@@ -299,10 +307,10 @@ function EFL:InsertOptions()
 						name = L["Name Font Outline"],
 						desc = L["Set the font outline."],
 						values = {
-							["NONE"] = L["None"],
+							["NONE"] = NONE,
 							["OUTLINE"] = "OUTLINE",
 							["MONOCHROMEOUTLINE"] = "MONOCROMEOUTLINE",
-							["THICKOUTLINE"] = "THICKOUTLINE",
+							["THICKOUTLINE"] = "THICKOUTLINE"
 						},
 						set = function(info, value) E.db.enhanceFriendsList.nameFontOutline = value EFL:EnhanceFriends() end
 					},
@@ -326,10 +334,10 @@ function EFL:InsertOptions()
 						name = L["Zone Font Outline"],
 						desc = L["Set the font outline."],
 						values = {
-							["NONE"] = L["None"],
+							["NONE"] = NONE,
 							["OUTLINE"] = "OUTLINE",
 							["MONOCHROMEOUTLINE"] = "MONOCROMEOUTLINE",
-							["THICKOUTLINE"] = "THICKOUTLINE",
+							["THICKOUTLINE"] = "THICKOUTLINE"
 						},
 						set = function(info, value) E.db.enhanceFriendsList.zoneFontOutline = value EFL:EnhanceFriends() end
 					}
@@ -491,44 +499,92 @@ function EFL:EnhanceFriends()
 				if db.colorizeNameOnly then
 					if db.hideClass then
 						if db.levelColor then
-							nameText:SetFormattedText("%s%s|r|cffffffff - %s|r %s%s|r", ClassColorCode(class), name, shortLevel, diff, level)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s%s|r|cffffffff - %s%s|r", ClassColorCode(class), name, diff, level)
+							else
+								nameText:SetFormattedText("%s%s|r|cffffffff - %s|r %s%s|r", ClassColorCode(class), name, shortLevel, diff, level)
+							end
 						else
-							nameText:SetFormattedText("%s%s|r|cffffffff - %s %s|r", ClassColorCode(class), name, shortLevel, level)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s%s|r|cffffffff - %s|r", ClassColorCode(class), name, level)
+							else
+								nameText:SetFormattedText("%s%s|r|cffffffff - %s %s|r", ClassColorCode(class), name, shortLevel, level)
+							end
 						end
 					else
 						if db.levelColor then
-							nameText:SetFormattedText("%s%s|r|cffffffff - %s|r %s%s|r|cffffffff %s|r", ClassColorCode(class), name, shortLevel, diff, level, class)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s%s|r|cffffffff - %s%s|r|cffffffff %s|r", ClassColorCode(class), name, diff, level, class)
+							else
+								nameText:SetFormattedText("%s%s|r|cffffffff - %s|r %s%s|r|cffffffff %s|r", ClassColorCode(class), name, shortLevel, diff, level, class)
+							end
 						else
-							nameText:SetFormattedText("%s%s|r|cffffffff - %s %s %s|r", ClassColorCode(class), name, shortLevel, level, class)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s%s|r|cffffffff - %s %s|r", ClassColorCode(class), name, level, class)
+							else
+								nameText:SetFormattedText("%s%s|r|cffffffff - %s %s %s|r", ClassColorCode(class), name, shortLevel, level, class)
+							end
 						end
 					end
 				else
 					if db.hideClass then
 						if db.levelColor then
-							nameText:SetFormattedText("%s%s - %s %s%s|r", ClassColorCode(class), name, shortLevel, diff, level)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s%s - %s%s|r", ClassColorCode(class), name, diff, level)
+							else
+								nameText:SetFormattedText("%s%s - %s %s%s|r", ClassColorCode(class), name, shortLevel, diff, level)
+							end
 						else
-							nameText:SetFormattedText("%s%s - %s %s", ClassColorCode(class), name, shortLevel, level)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s%s - %s", ClassColorCode(class), name, level)
+							else
+								nameText:SetFormattedText("%s%s - %s %s", ClassColorCode(class), name, shortLevel, level)
+							end
 						end
 					else
 						if db.levelColor then
-							nameText:SetFormattedText("%s%s - %s %s%s|r %s%s", ClassColorCode(class), name, shortLevel, diff, level, ClassColorCode(class), class)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s%s - %s%s|r %s%s", ClassColorCode(class), name, diff, level, ClassColorCode(class), class)
+							else
+								nameText:SetFormattedText("%s%s - %s %s%s|r %s%s", ClassColorCode(class), name, shortLevel, diff, level, ClassColorCode(class), class)
+							end
 						else
-							nameText:SetFormattedText("%s%s - %s %s %s", ClassColorCode(class), name, shortLevel, level, class)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s%s - %s %s", ClassColorCode(class), name, level, class)
+							else
+								nameText:SetFormattedText("%s%s - %s %s %s", ClassColorCode(class), name, shortLevel, level, class)
+							end
 						end
 					end
 				end
 			else
 				if db.hideClass then
 					if db.levelColor then
-						nameText:SetFormattedText("%s, %s %s%s|r", name, shortLevel, diff, level)
+						if db.hideLevelText then
+							nameText:SetFormattedText("%s, %s%s|r", name, diff, level)
+						else
+							nameText:SetFormattedText("%s, %s %s%s|r", name, shortLevel, diff, level)
+						end
 					else
-						nameText:SetFormattedText("%s, %s %s", name, shortLevel, level)
+						if db.hideLevelText then
+							nameText:SetFormattedText("%s, %s", name, level)
+						else
+							nameText:SetFormattedText("%s, %s %s", name, shortLevel, level)
+						end
 					end
 				else
 					if db.levelColor then
-						nameText:SetFormattedText("%s, %s %s%s|r %s", name, shortLevel, diff, level, class)
+						if db.hideLevelText then
+							nameText:SetFormattedText("%s, %s%s|r %s", name, diff, level, class)
+						else
+							nameText:SetFormattedText("%s, %s %s%s|r %s", name, shortLevel, diff, level, class)
+						end
 					else
-						nameText:SetFormattedText("%s, %s %s %s", name, shortLevel, level, class)
+						if db.hideLevelText then
+							nameText:SetFormattedText("%s, %s %s", name, level, class)
+						else
+							nameText:SetFormattedText("%s, %s %s %s", name, shortLevel, level, class)
+						end
 					end
 				end
 			end
@@ -566,13 +622,21 @@ function EFL:EnhanceFriends()
 							if db.offlineHideLevel then
 								nameText:SetFormattedText("%s%s", OfflineColorCode(class), name)
 							else
-								nameText:SetFormattedText("%s%s|r - %s %s%s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level)
+								if db.hideLevelText then
+									nameText:SetFormattedText("%s%s|r - %s%s", OfflineColorCode(class), name, offlineDiffColor, level)
+								else
+									nameText:SetFormattedText("%s%s|r - %s %s%s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level)
+								end
 							end
 						else
 							if db.offlineHideLevel then
 								nameText:SetFormattedText("%s%s|r - %s", OfflineColorCode(class), name, class)
 							else
-								nameText:SetFormattedText("%s%s|r - %s %s%s|r %s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level, class)
+								if db.hideLevelText then
+									nameText:SetFormattedText("%s%s|r - %s%s|r %s", OfflineColorCode(class), name, offlineDiffColor, level, class)
+								else
+									nameText:SetFormattedText("%s%s|r - %s %s%s|r %s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level, class)
+								end
 							end
 						end
 					else
@@ -580,28 +644,44 @@ function EFL:EnhanceFriends()
 							if db.offlineHideLevel then
 								nameText:SetFormattedText("%s%s", OfflineColorCode(class), name)
 							else
-								nameText:SetFormattedText("%s%s - %s %s%s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level)
+								if db.hideLevelText then
+									nameText:SetFormattedText("%s%s - %s%s", OfflineColorCode(class), name, offlineDiffColor, level)
+								else
+									nameText:SetFormattedText("%s%s - %s %s%s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level)
+								end
 							end
 						else
 							if db.offlineHideLevel then
 								nameText:SetFormattedText("%s%s - %s", OfflineColorCode(class), name, class)
 							else
-								nameText:SetFormattedText("%s%s - %s %s%s|r %s%s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level, OfflineColorCode(class), class)
+								if db.hideLevelText then
+									nameText:SetFormattedText("%s%s - %s%s|r %s%s", OfflineColorCode(class), name, offlineDiffColor, level, OfflineColorCode(class), class)
+								else
+									nameText:SetFormattedText("%s%s - %s %s%s|r %s%s", OfflineColorCode(class), name, offlineShortLevel, offlineDiffColor, level, OfflineColorCode(class), class)
+								end
 							end
 						end
 					end
 				else
 					if db.offlineHideClass then
 						if db.offlineHideLevel then
-							nameText:SetText(name)
+							nameText = name
 						else
-							nameText:SetFormattedText("%s - %s %s%s", name, offlineShortLevel, offlineDiffColor, level)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s - %s%s", name, offlineDiffColor, level)
+							else
+								nameText:SetFormattedText("%s - %s %s%s", name, offlineShortLevel, offlineDiffColor, level)
+							end
 						end
 					else
 						if db.offlineHideLevel then
 							nameText:SetFormattedText("%s - %s", name, class)
 						else
-							nameText:SetFormattedText("%s - %s %s%s|r %s", name, offlineShortLevel, offlineDiffColor, level, class)
+							if db.hideLevelText then
+								nameText:SetFormattedText("%s - %s%s|r %s", name, offlineDiffColor, level, class)
+							else
+								nameText:SetFormattedText("%s - %s %s%s|r %s", name, offlineShortLevel, offlineDiffColor, level, class)
+							end
 						end
 					end
 				end
