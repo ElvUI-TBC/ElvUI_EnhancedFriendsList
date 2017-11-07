@@ -391,7 +391,7 @@ function EFL:FriendsList_Update()
 		self:Update_Status(button)
 		self:Update_IconFrame(button)
 		self:Update_Name(button)
-		-- self:Update_Highlight(button) -- Need help
+		self:Update_Highlight(button) -- Need help
 	end
 end
 
@@ -429,30 +429,26 @@ function EFL:FriendListUpdate()
 		noteText:Hide()
 
 		self:Construct_IconFrame(button)
-
 		self:Construct_Background(button)
+		self:Construct_Highlight(button)
 
-
-		-- self:Construct_Highlight(button) -- Need help
-
-		-- This may be a bit messy
 		button:SetScript("OnEnter", function(self)
 			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 33, 33)
-
+			-- name
 			if not connected and name then
 				GameTooltip:AddLine(name, 0.5, 0.5, 0.5)
 			else
 				GameTooltip:AddLine(name)
 			end
-
+			-- class
 			if connected and class then
 				GameTooltip:AddLine(LEVEL.." "..level.." "..class, 1, 1, 1)
 			end
-
+			-- area
 			if connected and area then
 				GameTooltip:AddLine("   "..area, 0.5, 0.5, 0.5)
 			end
-
+			-- note
 			if note then
 				GameTooltip:AddLine(note)
 				GameTooltip:AddTexture(icon)
