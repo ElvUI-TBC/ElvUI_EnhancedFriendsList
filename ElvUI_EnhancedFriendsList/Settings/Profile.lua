@@ -4,9 +4,7 @@ local E, L, V, P, G = unpack(ElvUI)
 P["enhanceFriendsList"] = {
 	-- General
 	["showBackground"] = true,
-	["showNotesIcon"] = true,
 	["showStatusIcon"] = true,
-	["showTooltipInfo"] = true,
 	["statusIcons"] = "Default",
 	["nameFont"] = "PT Sans Narrow",
 	["nameFontSize"] = 12,
@@ -25,9 +23,11 @@ P["enhanceFriendsList"] = {
 		["levelColor"] = false,
 		["levelText"] = true,
 		["shortLevel"] = false,
+		["zoneText"] = true,
 		["sameZone"] = false,
 		["sameZoneColor"] = {r = 0.3, g = 1.0, b = 0.3},
 		["classIcon"] = false,
+		["classIconStatusColor"] = false,
 	},
 	["Offline"] = {
 		["enhancedName"] = false,
