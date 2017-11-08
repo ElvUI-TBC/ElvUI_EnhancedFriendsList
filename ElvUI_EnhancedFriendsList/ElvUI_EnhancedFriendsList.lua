@@ -105,6 +105,7 @@ function EFL:Update()
 		local noteText = _G["FriendsFrameFriendButton"..i.."ButtonTextNoteText"]
 		local noteIcon = _G["FriendsFrameFriendButton"..i.."ButtonTextNoteIcon"]
 		local buttonSummon = _G["FriendsFrameFriendButton"..i.."ButtonTextSummonButton"]
+		local noteIcon = noteIcon:GetTexture()
 
 		button.name = nameText
 		button.info = infoText
@@ -114,6 +115,7 @@ function EFL:Update()
 		self:Configure_Status(button)
 		self:Configure_IconFrame(button)
 		self:Configure_NoteFrame(button)
+		self:Configure_Tooltip(button, name, level, class, area, connected, note, noteIcon)
 
 		button.name:SetFont(LSM:Fetch("font", E.db.enhanceFriendsList.nameFont), E.db.enhanceFriendsList.nameFontSize, E.db.enhanceFriendsList.nameFontOutline)
 		button.info:SetFont(LSM:Fetch("font", E.db.enhanceFriendsList.zoneFont), E.db.enhanceFriendsList.zoneFontSize, E.db.enhanceFriendsList.zoneFontOutline)
@@ -265,6 +267,41 @@ function EFL:Configure_NoteFrame(button)
 	end
 end
 
+-- Tooltip
+function EFL:Configure_Tooltip(button, name, level, class, area, connected, note, noteIcon)
+	button:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 33, 33)
+		-- name
+		if not connected and name then
+			GameTooltip:AddLine(name, 0.5, 0.5, 0.5)
+		else
+			GameTooltip:AddLine(name)
+		end
+		-- class
+		if connected and class then
+			GameTooltip:AddLine(LEVEL.." "..level.." "..class, 1, 1, 1)
+		end
+		-- area
+		if connected and area then
+			GameTooltip:AddLine("   "..area, 0.5, 0.5, 0.5)
+		end
+		-- note
+		if note then
+			GameTooltip:AddLine(note)
+			GameTooltip:AddTexture(noteIcon)
+		end
+
+		if E.db.enhanceFriendsList.showTooltipInfo then
+			GameTooltip:Show()
+		end
+	end)
+	button:SetScript("OnLeave", function()
+		if E.db.enhanceFriendsList.showTooltipInfo then
+			GameTooltip:Hide()
+		end
+	end)
+end
+
 -- Background
 function EFL:Update_Background(button)
 	if not E.db.enhanceFriendsList.showBackground then return end
@@ -391,7 +428,7 @@ function EFL:FriendsList_Update()
 		self:Update_Status(button)
 		self:Update_IconFrame(button)
 		self:Update_Name(button)
-		self:Update_Highlight(button) -- Need help
+		self:Update_Highlight(button)
 	end
 end
 
@@ -421,8 +458,6 @@ function EFL:FriendListUpdate()
 		local noteIcon = _G["FriendsFrameFriendButton"..i.."ButtonTextNoteIcon"]
 		local buttonSummon = _G["FriendsFrameFriendButton"..i.."ButtonTextSummonButton"]
 
-		local icon = noteIcon:GetTexture()
-
 		buttonSummon:Point("LEFT", 270, 1)
 
 		LocationText:Hide()
@@ -431,34 +466,6 @@ function EFL:FriendListUpdate()
 		self:Construct_IconFrame(button)
 		self:Construct_Background(button)
 		self:Construct_Highlight(button)
-
-		button:SetScript("OnEnter", function(self)
-			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 33, 33)
-			-- name
-			if not connected and name then
-				GameTooltip:AddLine(name, 0.5, 0.5, 0.5)
-			else
-				GameTooltip:AddLine(name)
-			end
-			-- class
-			if connected and class then
-				GameTooltip:AddLine(LEVEL.." "..level.." "..class, 1, 1, 1)
-			end
-			-- area
-			if connected and area then
-				GameTooltip:AddLine("   "..area, 0.5, 0.5, 0.5)
-			end
-			-- note
-			if note then
-				GameTooltip:AddLine(note)
-				GameTooltip:AddTexture(icon)
-			end
-
-			GameTooltip:Show()
-		end)
-		button:SetScript("OnLeave", function()
-			GameTooltip:Hide()
-		end)
 	end
 
 	self:Update()

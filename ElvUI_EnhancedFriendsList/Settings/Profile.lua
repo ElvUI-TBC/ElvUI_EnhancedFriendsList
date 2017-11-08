@@ -6,6 +6,7 @@ P["enhanceFriendsList"] = {
 	["showBackground"] = true,
 	["showNotesIcon"] = true,
 	["showStatusIcon"] = true,
+	["showTooltipInfo"] = true,
 	["statusIcons"] = "Default",
 	["nameFont"] = "PT Sans Narrow",
 	["nameFontSize"] = 12,
