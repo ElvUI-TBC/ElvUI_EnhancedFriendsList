@@ -322,7 +322,7 @@ function EFL:Construct_Tooltip(button)
 	button:SetScript("OnEnter", function(self)
 		if not E.db.enhanceFriendsList.showTooltipInfo then return end
 
-		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 33, 33)
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 33, 30)
 		-- name
 		if button.TYPE == "Offline" then
 			GameTooltip:AddLine(self.nameText, 0.5, 0.5, 0.5)
@@ -339,8 +339,10 @@ function EFL:Construct_Tooltip(button)
 		end
 		-- noteText
 		if self.noteText then
-			GameTooltip:AddLine(self.noteText)
-			GameTooltip:AddTexture("Interface/FriendsFrame/UI-FriendsFrame-Note")
+			-- GameTooltip:AddLine(self.noteText)
+			local icon = "Interface/FriendsFrame/UI-FriendsFrame-Note"
+			GameTooltip:AddLine("|T"..icon..":16:16:0:0|t"..self.noteText)
+			-- GameTooltip:AddTexture()
 		end
 		GameTooltip:Show()
 	end)
