@@ -267,7 +267,6 @@ function EFL:Configure_Background(button)
 end
 
 function EFL:Construct_Background(button)
-	button:SetHighlightTexture(nil)
 	local width, height = (button:GetWidth() * 0.5), (button:GetHeight() * 0.92)
 
 	button.backgroundLeft = button:CreateTexture(nil, "BACKGROUND")
