@@ -34,8 +34,13 @@ function EFL:InsertOptions()
 						type = "toggle",
 						name = L["Show Status Icon"]
 					},
-					statusIcons = {
+					showTooltipInfo = {
 						order = 3,
+						type = "toggle",
+						name = L["Show Tooltip Info"]
+					},
+					statusIcons = {
+						order = 4,
 						type = "select",
 						name = L["Status Icons Textures"],
 						values = {
@@ -45,7 +50,7 @@ function EFL:InsertOptions()
 						}
 					},
 					nameFont = {
-						order = 4,
+						order = 5,
 						type = "group",
 						name = L["Name Font"],
 						guiInline = true,
@@ -79,7 +84,7 @@ function EFL:InsertOptions()
 						}
 					},
 					zoneFont = {
-						order = 5,
+						order = 6,
 						type = "group",
 						name = L["Zone Font"],
 						guiInline = true,

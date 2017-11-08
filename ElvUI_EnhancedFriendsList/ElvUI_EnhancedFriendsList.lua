@@ -9,7 +9,6 @@ local format = format
 local GetFriendInfo = GetFriendInfo
 local GetQuestDifficultyColor = GetQuestDifficultyColor
 local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
-local FRIENDS_BUTTON_TYPE_WOW = FRIENDS_BUTTON_TYPE_WOW
 local LOCALIZED_CLASS_NAMES_FEMALE = LOCALIZED_CLASS_NAMES_FEMALE
 local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
@@ -21,14 +20,14 @@ local StatusIcons = {
 	Default = {
 		Online = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\Online",
 		Offline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\Offline",
-		DND	= "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\DND",
-		AFK	= "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\AFK"
+		DND = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\DND",
+		AFK = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Default\\AFK"
 	},
 	Square = {
 		Online = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\Online",
 		Offline = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\Offline",
-		DND	= "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\DND",
-		AFK	= "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\AFK"
+		DND = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\DND",
+		AFK = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\Square\\AFK"
 	},
 	D3 = {
 		Online = "Interface\\AddOns\\ElvUI_EnhancedFriendsList\\Media\\Textures\\D3\\Online",
@@ -318,6 +317,40 @@ function EFL:Construct_Highlight(button)
 	button.highlightRight:SetGradientAlpha("Horizontal", 0.243,0.570,1,0, 0.243,0.570,1,0.35)
 end
 
+-- Tooltip
+function EFL:Construct_Tooltip(button)
+	button:SetScript("OnEnter", function(self)
+		if not E.db.enhanceFriendsList.showTooltipInfo then return end
+
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 33, 33)
+		-- name
+		if button.TYPE == "Offline" then
+			GameTooltip:AddLine(self.nameText, 0.5, 0.5, 0.5)
+		else
+			GameTooltip:AddLine(self.nameText)
+		end
+		-- class
+		if button.TYPE == "Online" and self.class then
+			GameTooltip:AddLine(LEVEL.." "..self.levelText.." "..self.class, 1, 1, 1)
+		end
+		-- area
+		if button.TYPE == "Online" and self.area then
+			GameTooltip:AddLine(self.area, 0.5, 0.5, 0.5)
+		end
+		-- noteText
+		if self.noteText then
+			GameTooltip:AddLine(self.noteText)
+			GameTooltip:AddTexture("Interface/FriendsFrame/UI-FriendsFrame-Note")
+		end
+		GameTooltip:Show()
+	end)
+	button:SetScript("OnLeave", function()
+		if E.db.enhanceFriendsList.showTooltipInfo then
+			GameTooltip:Hide()
+		end
+	end)
+end
+
 function EFL:GetLocalFriendInfo(name)
 	local info = EnhancedFriendsListDB[E.myrealm][name]
 	if info then
@@ -328,22 +361,22 @@ function EFL:GetLocalFriendInfo(name)
 end
 
 function EFL:FriendsList_Update()
-	local numFriends = GetNumFriends();
-	local nameLocationText, infoText, noteText, noteHiddenText;
-	local name, level, class, area, connected, status, note;
-	local button, RAFIcon, noteFrame, summonButton, RAF;
+	local nameLocationText, infoText, noteText, noteHiddenText
+	local name, level, class, area, connected, status
+	local button
 
-	local friendOffset = FauxScrollFrame_GetOffset(FriendsFrameFriendsScrollFrame);
+	local friendOffset = FauxScrollFrame_GetOffset(FriendsFrameFriendsScrollFrame)
 	local friendIndex;
 	for i = 1, FRIENDS_TO_DISPLAY, 1 do
 		friendIndex = friendOffset + i;
-		local name, level, class, area, connected, status = GetFriendInfo(friendIndex)
+		local name, level, class, area, connected, status, noteText = GetFriendInfo(friendIndex)
 		if not name then return end
 
 		button = _G["FriendsFrameFriendButton"..i]
 		button.nameText = name
 		button.TYPE = connected and "Online" or "Offline"
 		button.statusType = status
+		button.id = friendIndex
 
 		if connected then
 			if not EnhancedFriendsListDB[E.myrealm][name] then
@@ -361,6 +394,7 @@ function EFL:FriendsList_Update()
 		button.levelText = level
 		button.class = class
 		button.area = area
+		button.noteText = noteText
 
 		self:Update_Background(button)
 		self:Update_Status(button)
@@ -396,10 +430,13 @@ function EFL:FriendListUpdate()
 		self:Construct_IconFrame(button)
 		self:Construct_Background(button)
 		self:Construct_Highlight(button)
+		self:Construct_Tooltip(button)
 
 		button.name = _G["FriendsFrameFriendButton"..i.."ButtonTextName"]
 		button.info = _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]
 		_G["FriendsFrameFriendButton"..i.."ButtonTextLocation"]:Hide()
+		_G["FriendsFrameFriendButton"..i.."ButtonTextNoteHiddenText"]:Hide()
+		_G["FriendsFrameFriendButton"..i.."ButtonTextNoteText"]:Hide()
 	end
 
 	self:Update()
