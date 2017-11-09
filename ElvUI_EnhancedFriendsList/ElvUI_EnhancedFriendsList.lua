@@ -1,5 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI)
 local EFL = E:NewModule("EnhancedFriendsList", "AceHook-3.0")
+local S = E:GetModule("Skins")
 local EP = LibStub("LibElvUIPlugin-1.0")
 local LSM = LibStub("LibSharedMedia-3.0", true)
 
@@ -13,8 +14,8 @@ local LOCALIZED_CLASS_NAMES_FEMALE = LOCALIZED_CLASS_NAMES_FEMALE
 local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
-FRIENDS_WOW_NAME_COLOR = {r=0.996, g=0.882, b=0.361};
-FRIENDS_GRAY_COLOR = {r=0.486, g=0.518, b=0.541};
+FRIENDS_WOW_NAME_COLOR = {r=0.996, g=0.882, b=0.361}
+FRIENDS_GRAY_COLOR = {r=0.486, g=0.518, b=0.541}
 
 local StatusIcons = {
 	Default = {
@@ -124,7 +125,7 @@ end
 function EFL:Construct_Status(button)
 	button.status = button:CreateTexture()
 	button.status:SetSize(16, 16)
-	button.status:SetPoint("TOPLEFT", 4, -2)
+	button.status:SetPoint("LEFT", 4, 7)
 end
 
 -- Name
@@ -181,7 +182,7 @@ function EFL:Update_Name(button)
 	if button.iconFrame:IsShown() then
 		button.name:Point("LEFT", button.iconFrame, "RIGHT", 9, infoText ~= "" and 7 or 0)
 	else
-		if E.db.enhanceFriendsList.showStatusIcon then
+		if E.db.enhanceFriendsList.showStatusIcon or E.db.enhanceFriendsList.showNoteIcon then
 			button.name:Point("TOPLEFT", 28, infoText ~= "" and -3 or -10)
 		else
 			button.name:Point("TOPLEFT", 9, infoText ~= "" and -3 or -10)
@@ -224,7 +225,7 @@ end
 
 function EFL:Configure_IconFrame(button)
 	button.iconFrame:ClearAllPoints()
-	if E.db.enhanceFriendsList.showStatusIcon then
+	if E.db.enhanceFriendsList.showStatusIcon or E.db.enhanceFriendsList.showNoteIcon then
 		button.iconFrame:Point("LEFT", 22, 0)
 	else
 		button.iconFrame:Point("LEFT", 3, 0)
@@ -240,6 +241,26 @@ function EFL:Construct_IconFrame(button)
 	button.iconFrame.texture:SetAllPoints()
 	button.iconFrame.texture:SetTexture("Interface\\WorldStateFrame\\Icons-Classes")
 	button.iconFrame:Hide()
+end
+
+-- NoteIcon
+function EFL:Update_NoteIcon(button)
+	S:HandleCloseButton(button.note, nil, "|TInterface\\FriendsFrame\\UI-FriendsFrame-Note:15:15:4:-2|t")
+	button.note:Size(24, 28)
+
+	button.note:ClearAllPoints()
+
+	if E.db.enhanceFriendsList.showStatusIcon then
+		button.note:Point("LEFT", 0, -7)
+	else
+		button.note:Point("LEFT", 0, 7)
+	end
+
+	if E.db.enhanceFriendsList.showNoteIcon then
+		button.note:Show()
+	else
+		button.note:Hide()
+	end
 end
 
 -- Background
@@ -339,10 +360,7 @@ function EFL:Construct_Tooltip(button)
 		end
 		-- noteText
 		if self.noteText then
-			-- GameTooltip:AddLine(self.noteText)
-			local icon = "Interface/FriendsFrame/UI-FriendsFrame-Note"
-			GameTooltip:AddLine("|T"..icon..":16:16:0:0|t"..self.noteText)
-			-- GameTooltip:AddTexture()
+			GameTooltip:AddLine("|TInterface\\FriendsFrame\\UI-FriendsFrame-Note:16:16:0:0|t"..self.noteText)
 		end
 		GameTooltip:Show()
 	end)
@@ -368,13 +386,14 @@ function EFL:FriendsList_Update()
 	local button
 
 	local friendOffset = FauxScrollFrame_GetOffset(FriendsFrameFriendsScrollFrame)
-	local friendIndex;
+	local friendIndex
 	for i = 1, FRIENDS_TO_DISPLAY, 1 do
-		friendIndex = friendOffset + i;
+		friendIndex = friendOffset + i
 		local name, level, class, area, connected, status, noteText = GetFriendInfo(friendIndex)
 		if not name then return end
 
 		button = _G["FriendsFrameFriendButton"..i]
+		button.note = _G["FriendsFrameFriendButton"..i.."ButtonTextNote"]
 		button.nameText = name
 		button.TYPE = connected and "Online" or "Offline"
 		button.statusType = status
@@ -398,6 +417,7 @@ function EFL:FriendsList_Update()
 		button.area = area
 		button.noteText = noteText
 
+		self:Update_NoteIcon(button)
 		self:Update_Background(button)
 		self:Update_Status(button)
 		self:Update_IconFrame(button)
@@ -428,6 +448,11 @@ function EFL:FriendListUpdate()
 
 		button:StripTextures()
 
+		_G["FriendsFrameFriendButton"..i.."ButtonTextLocation"]:Hide()
+		_G["FriendsFrameFriendButton"..i.."ButtonTextNoteIcon"]:Hide()
+		_G["FriendsFrameFriendButton"..i.."ButtonTextNoteHiddenText"]:Hide()
+		_G["FriendsFrameFriendButton"..i.."ButtonTextNoteText"]:Hide()
+
 		self:Construct_Status(button)
 		self:Construct_IconFrame(button)
 		self:Construct_Background(button)
@@ -436,9 +461,6 @@ function EFL:FriendListUpdate()
 
 		button.name = _G["FriendsFrameFriendButton"..i.."ButtonTextName"]
 		button.info = _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]
-		_G["FriendsFrameFriendButton"..i.."ButtonTextLocation"]:Hide()
-		_G["FriendsFrameFriendButton"..i.."ButtonTextNoteHiddenText"]:Hide()
-		_G["FriendsFrameFriendButton"..i.."ButtonTextNoteText"]:Hide()
 	end
 
 	self:Update()
