@@ -245,9 +245,6 @@ end
 
 -- NoteIcon
 function EFL:Update_NoteIcon(button)
-	S:HandleCloseButton(button.note, nil, "|TInterface\\FriendsFrame\\UI-FriendsFrame-Note:15:15:4:-2|t")
-	button.note:Size(24, 28)
-
 	button.note:ClearAllPoints()
 
 	if E.db.enhanceFriendsList.showStatusIcon then
@@ -261,6 +258,11 @@ function EFL:Update_NoteIcon(button)
 	else
 		button.note:Hide()
 	end
+end
+
+function EFL:Construct_NoteIcon(button)
+	S:HandleCloseButton(button.note, nil, "|TInterface\\FriendsFrame\\UI-FriendsFrame-Note:15:15:4:-2|t")
+	button.note:Size(24, 28)
 end
 
 -- Background
@@ -393,7 +395,6 @@ function EFL:FriendsList_Update()
 		if not name then return end
 
 		button = _G["FriendsFrameFriendButton"..i]
-		button.note = _G["FriendsFrameFriendButton"..i.."ButtonTextNote"]
 		button.nameText = name
 		button.TYPE = connected and "Online" or "Offline"
 		button.statusType = status
@@ -445,6 +446,7 @@ function EFL:FriendListUpdate()
 
 	for i = 1, FRIENDS_TO_DISPLAY do
 		local button = _G["FriendsFrameFriendButton"..i]
+		button.note = _G["FriendsFrameFriendButton"..i.."ButtonTextNote"]
 
 		button:StripTextures()
 
@@ -458,6 +460,7 @@ function EFL:FriendListUpdate()
 		self:Construct_Background(button)
 		self:Construct_Highlight(button)
 		self:Construct_Tooltip(button)
+		self:Construct_NoteIcon(button)
 
 		button.name = _G["FriendsFrameFriendButton"..i.."ButtonTextName"]
 		button.info = _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]
