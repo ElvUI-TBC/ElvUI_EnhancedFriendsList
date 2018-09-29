@@ -6,8 +6,43 @@ local function ColorizeSettingName(settingName)
 end
 
 function EFL:InsertOptions()
-	E.Options.args.enhanceFriendsList = {
-		order = 54,
+	if not E.Options.args.elvuiPlugins then
+		E.Options.args.elvuiPlugins = {
+			order = 50,
+			type = "group",
+			name = "|cff00b30bE|r|cffC4C4C4lvUI_|r|cff00b30bP|r|cffC4C4C4lugins|r",
+			args = {
+				header = {
+					order = 0,
+					type = "header",
+					name = "|cff00b30bE|r|cffC4C4C4lvUI_|r|cff00b30bP|r|cffC4C4C4lugins|r"
+				},
+				enhanceFriendsListShortcut = {
+					type = "execute",
+					name = ColorizeSettingName(L["Enhanced Friends List"]),
+					func = function()
+						if IsAddOnLoaded("ElvUI_Config") then
+							local ACD = LibStub("AceConfigDialog-3.0-ElvUI")
+							ACD:SelectGroup("ElvUI", "elvuiPlugins", "enhanceFriendsList", "general")
+						end
+					end
+				}
+			}
+		}
+	elseif not E.Options.args.elvuiPlugins.args.enhanceFriendsListShortcut then
+		E.Options.args.elvuiPlugins.args.enhanceFriendsListShortcut = {
+			type = "execute",
+			name = ColorizeSettingName(L["Enhanced Friends List"]),
+			func = function()
+				if IsAddOnLoaded("ElvUI_Config") then
+					local ACD = LibStub("AceConfigDialog-3.0-ElvUI")
+					ACD:SelectGroup("ElvUI", "elvuiPlugins", "enhanceFriendsList", "general")
+				end
+			end
+		}
+	end
+
+	E.Options.args.elvuiPlugins.args.enhanceFriendsList = {
 		type = "group",
 		childGroups = "tab",
 		name = ColorizeSettingName(L["Enhanced Friends List"]),
@@ -54,7 +89,7 @@ function EFL:InsertOptions()
 						type = "select",
 						name = L["Status Icons Textures"],
 						values = {
-							["Default"] = L["Default"],
+							["Default"] = DEFAULT,
 							["Square"] = "Square",
 							["D3"] = "Diablo 3"
 						}

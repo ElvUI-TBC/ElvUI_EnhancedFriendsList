@@ -1,7 +1,7 @@
 ﻿## Interface: 20400
 ## Author: Apollyon, Bunny
 ## Version: 1.09
-## Title: |cffA11313E|r|cffC4C4C4lvUI|r |cffA11313E|r|cffC4C4C4nhanced|r |cffA11313F|r|cffC4C4C4riends|r |cffA11313L|r|cffC4C4C4ist|r
+## Title: |cff00b30bE|r|cffC4C4C4lvUI|r |cff00b30bE|r|cffC4C4C4nhanced|r |cff00b30bF|r|cffC4C4C4riends|r |cff00b30bL|r|cffC4C4C4ist|r
 ## SavedVariables: EnhancedFriendsListDB
 ## RequiredDeps: ElvUI
 
