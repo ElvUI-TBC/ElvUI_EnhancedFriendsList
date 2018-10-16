@@ -1,6 +1,12 @@
 local E, L, V, P, G = unpack(ElvUI)
 local EFL = E:GetModule("EnhancedFriendsList")
 
+local DEFAULT = DEFAULT
+local FONT_SIZE, NONE = FONT_SIZE, NONE
+local CLASS, LEVEL, NAME, ZONE = CLASS, LEVEL, NAME, ZONE
+
+local format = string.format
+
 local function ColorizeSettingName(settingName)
 	return format("|cff1784d1%s|r", settingName)
 end

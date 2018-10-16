@@ -4,18 +4,19 @@ local S = E:GetModule("Skins")
 local EP = LibStub("LibElvUIPlugin-1.0")
 local LSM = LibStub("LibSharedMedia-3.0", true)
 
-local unpack, pairs, ipairs = unpack, pairs, ipairs
-local format = format
+local unpack, pairs, ipairs, tonumber = unpack, pairs, ipairs, tonumber
+local format, sub = string.format, string.sub
 
 local GetFriendInfo = GetFriendInfo
 local GetQuestDifficultyColor = GetQuestDifficultyColor
 local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
+local LEVEL = LEVEL
 local LOCALIZED_CLASS_NAMES_FEMALE = LOCALIZED_CLASS_NAMES_FEMALE
 local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
-FRIENDS_WOW_NAME_COLOR = {r=0.996, g=0.882, b=0.361}
-FRIENDS_GRAY_COLOR = {r=0.486, g=0.518, b=0.541}
+FRIENDS_WOW_NAME_COLOR = {r = 0.996, g = 0.882, b = 0.361}
+FRIENDS_GRAY_COLOR = {r = 0.486, g = 0.518, b = 0.541}
 
 local StatusIcons = {
 	Default = {
@@ -86,7 +87,7 @@ end
 local function HexToRGB(hex)
 	if not hex then return nil end
 
-	local rhex, ghex, bhex = string.sub(hex, 5, 6), string.sub(hex, 7, 8), string.sub(hex, 9, 10)
+	local rhex, ghex, bhex = sub(hex, 5, 6), sub(hex, 7, 8), sub(hex, 9, 10)
 	return {r = tonumber(rhex, 16)/225, g = tonumber(ghex, 16)/225, b = tonumber(bhex, 16)/225}
 end
 
@@ -271,6 +272,9 @@ end
 function EFL:Construct_NoteIcon(button)
 	S:HandleCloseButton(button.note, nil, "|TInterface\\FriendsFrame\\UI-FriendsFrame-Note:15:15:4:-2|t")
 	button.note:Size(24, 28)
+
+	button.note:SetScript("OnEnter", nil)
+	button.note:SetScript("OnLeave", nil)
 end
 
 -- Background
