@@ -1,10 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI)
 local EFL = E:GetModule("EnhancedFriendsList")
 
-local DEFAULT = DEFAULT
-local FONT_SIZE, NONE = FONT_SIZE, NONE
-local CLASS, LEVEL, NAME, ZONE = CLASS, LEVEL, NAME, ZONE
-
 local format = string.format
 
 local function ColorizeSettingName(settingName)
@@ -95,7 +91,7 @@ function EFL:InsertOptions()
 						type = "select",
 						name = L["Status Icons Textures"],
 						values = {
-							["Default"] = DEFAULT,
+							["Default"] = L["Default"],
 							["Square"] = "Square",
 							["D3"] = "Diablo 3"
 						}
@@ -117,7 +113,7 @@ function EFL:InsertOptions()
 							nameFontSize = {
 								order = 2,
 								type = "range",
-								name = FONT_SIZE,
+								name = L["Font Size"],
 								min = 6, max = 22, step = 1
 							},
 							nameFontOutline = {
@@ -126,7 +122,7 @@ function EFL:InsertOptions()
 								name = L["Font Outline"],
 								desc = L["Set the font outline."],
 								values = {
-									["NONE"] = NONE,
+									["NONE"] = L["None"],
 									["OUTLINE"] = "OUTLINE",
 									["MONOCHROMEOUTLINE"] = "MONOCROMEOUTLINE",
 									["THICKOUTLINE"] = "THICKOUTLINE"
@@ -151,7 +147,7 @@ function EFL:InsertOptions()
 							zoneFontSize = {
 								order = 2,
 								type = "range",
-								name = FONT_SIZE,
+								name = L["Font Size"],
 								min = 6, max = 22, step = 1
 							},
 							zoneFontOutline = {
@@ -160,7 +156,7 @@ function EFL:InsertOptions()
 								name = L["Font Outline"],
 								desc = L["Set the font outline."],
 								values = {
-									["NONE"] = NONE,
+									["NONE"] = L["None"],
 									["OUTLINE"] = "OUTLINE",
 									["MONOCHROMEOUTLINE"] = "MONOCROMEOUTLINE",
 									["THICKOUTLINE"] = "THICKOUTLINE"
@@ -185,7 +181,7 @@ function EFL:InsertOptions()
 					name = {
 						order = 1,
 						type = "group",
-						name = NAME,
+						name = L["Name"],
 						guiInline = true,
 						args = {
 							enhancedName = {
@@ -204,7 +200,7 @@ function EFL:InsertOptions()
 					level = {
 						order = 2,
 						type = "group",
-						name = LEVEL,
+						name = L["Level"],
 						guiInline = true,
 						args = {
 							level = {
@@ -235,7 +231,7 @@ function EFL:InsertOptions()
 					class = {
 						order = 3,
 						type = "group",
-						name = CLASS,
+						name = L["Class"],
 						guiInline = true,
 						args = {
 							classText = {
@@ -259,7 +255,7 @@ function EFL:InsertOptions()
 					zone = {
 						order = 4,
 						type = "group",
-						name = ZONE,
+						name = L["Zone"],
 						guiInline = true,
 						args = {
 							zoneText = {
@@ -341,7 +337,7 @@ function EFL:InsertOptions()
 					name = {
 						order = 1,
 						type = "group",
-						name = NAME,
+						name = L["Name"],
 						guiInline = true,
 						args = {
 							enhancedName = {
@@ -360,7 +356,7 @@ function EFL:InsertOptions()
 					level = {
 						order = 2,
 						type = "group",
-						name = LEVEL,
+						name = L["Level"],
 						guiInline = true,
 						args = {
 							level = {
@@ -392,7 +388,7 @@ function EFL:InsertOptions()
 					class = {
 						order = 3,
 						type = "group",
-						name = CLASS,
+						name = L["Class"],
 						guiInline = true,
 						args = {
 							classText = {
@@ -410,7 +406,7 @@ function EFL:InsertOptions()
 					zone = {
 						order = 4,
 						type = "group",
-						name = ZONE,
+						name = L["Zone"],
 						guiInline = true,
 						args = {
 							zoneText = {
