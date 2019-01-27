@@ -257,9 +257,9 @@ function EFL:Update_NoteIcon(button)
 	button.note:ClearAllPoints()
 
 	if E.db.enhanceFriendsList.showStatusIcon then
-		button.note:Point("LEFT", 0, -7)
+		button.note:Point("LEFT", 3, -7)
 	else
-		button.note:Point("LEFT", 0, 7)
+		button.note:Point("LEFT", 3, 5)
 	end
 
 	if E.db.enhanceFriendsList.showNoteIcon then
@@ -270,11 +270,15 @@ function EFL:Update_NoteIcon(button)
 end
 
 function EFL:Construct_NoteIcon(button)
-	S:HandleCloseButton(button.note, nil, "|TInterface\\FriendsFrame\\UI-FriendsFrame-Note:15:15:4:-2|t")
-	button.note:Size(24, 28)
+	button.note:Size(18)
 
-	button.note:SetScript("OnEnter", nil)
-	button.note:SetScript("OnLeave", nil)
+	button.note.tex = button.note:CreateTexture(nil, "OVERLAY")
+	button.note.tex:SetTexture([[Interface\AddOns\ElvUI\media\textures\copy]])
+	button.note.tex:SetInside()
+	button.note.tex:SetAlpha(0.3)
+
+	button.note:HookScript2("OnEnter", function() button.note.tex:SetAlpha(1) end)
+	button.note:HookScript2("OnLeave", function() button.note.tex:SetAlpha(0.3) end)
 end
 
 -- Background
@@ -461,6 +465,7 @@ function EFL:FriendListUpdate()
 		button.note = _G["FriendsFrameFriendButton"..i.."ButtonTextNote"]
 
 		button:StripTextures()
+		button.note:StripTextures()
 
 		_G["FriendsFrameFriendButton"..i.."ButtonTextLocation"]:Hide()
 		_G["FriendsFrameFriendButton"..i.."ButtonTextNoteIcon"]:Hide()
